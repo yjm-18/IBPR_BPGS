@@ -9,7 +9,7 @@
 3. 详细评估边界预测准确性（Precision, Recall, F1, AUC等）
 
 使用方法:
-    python train_boundary_only.py --config ginkgo_boundary_segment.yaml
+    python auxiliary/boundary/train_boundary_only.py --config auxiliary/boundary/config.yaml
 """
 
 import os
@@ -822,7 +822,7 @@ def main():
     import yaml
 
     parser = argparse.ArgumentParser(description='边界预测专项训练')
-    parser.add_argument('--config', type=str, default='ginkgo_boundary_segment.yaml')
+    parser.add_argument('--config', type=str, default=str(Path(__file__).with_name('config.yaml')))
     parser.add_argument('--epochs', type=int, default=50)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--threshold', type=float, default=0.5)
@@ -858,11 +858,11 @@ def main():
     logger.info(f"✓ 模型参数量: {n_params / 1e6:.2f}M")
 
     # 构建数据集
-    from ginkgo_dataset import GinkgoDataset, build_ginkgo_dataloader
+    from boundary_dataset import ForestBoundaryDataset, build_forest_boundary_dataloader
 
     train_cfg = {k: v for k, v in cfg['data']['train'].items() if k != 'type'}
-    train_set = GinkgoDataset(**train_cfg, logger=logger)
-    train_loader = build_ginkgo_dataloader(
+    train_set = ForestBoundaryDataset(**train_cfg, logger=logger)
+    train_loader = build_forest_boundary_dataloader(
         train_set,
         batch_size=cfg['dataloader']['train']['batch_size'],
         num_workers=cfg['dataloader']['train']['num_workers'],
@@ -870,8 +870,8 @@ def main():
     )
 
     val_cfg = {k: v for k, v in cfg['data']['test'].items() if k != 'type'}
-    val_set = GinkgoDataset(**val_cfg, logger=logger)
-    val_loader = build_ginkgo_dataloader(
+    val_set = ForestBoundaryDataset(**val_cfg, logger=logger)
+    val_loader = build_forest_boundary_dataloader(
         val_set,
         batch_size=cfg['dataloader']['test']['batch_size'],
         num_workers=cfg['dataloader']['test']['num_workers'],

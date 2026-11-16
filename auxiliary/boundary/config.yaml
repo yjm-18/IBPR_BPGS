@@ -14,7 +14,7 @@ model:
 
 data:
   train:
-    type: ginkgo_new
+    type: forest_boundary
     data_root: 'data/boundary'
     prefix: train
     suffix: '_merged_inst_nostuff.pth'
@@ -23,7 +23,7 @@ data:
     boundary_label_power: 1.0
     voxel_cfg: {scale: 10, spatial_shape: [512, 1024], max_npoint: 1200000, min_npoint: 5000}
   test:
-    type: ginkgo_new
+    type: forest_boundary
     data_root: 'data/boundary'
     prefix: val
     suffix: '_merged_inst_nostuff.pth'

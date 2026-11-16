@@ -1,5 +1,5 @@
 """
-银杏树数据集 - 边界引导实例分割版本
+森林边界数据集 - 边界引导实例分割版本
 =====================================
 
 适配 BoundaryGuidedSegmentation 模型，支持：
@@ -26,25 +26,25 @@ import torch
 from torch.utils.data import Dataset
 
 
-class GinkgoDataset(Dataset):
+class ForestBoundaryDataset(Dataset):
     """
-    银杏树数据集 - 边界引导实例分割版本
+    森林边界数据集 - 边界引导实例分割版本
 
     类别定义：
-    - 语义类别：other (0), ginkgo (1)
-    - 实例类别：ginkgo (0) - 只有银杏树参与实例分割
+    - 语义类别：other (0), tree (1)
+    - 实例类别：tree (0) - 只有树木参与实例分割
     - sem2ins_classes: [1] - 语义标签1对应实例分割
     """
 
     # 实例分割类别
-    CLASSES = ('ginkgo',)
+    CLASSES = ('tree',)
     NYU_ID = None
 
     # 语义分割类别
-    SEMANTIC_CLASSES = ('other', 'ginkgo')
+    SEMANTIC_CLASSES = ('other', 'tree')
 
     # 前景类别
-    SEM2INS_CLASSES = [1]  # ginkgo 的语义标签
+    SEM2INS_CLASSES = [1]  # tree 的语义标签
 
     # TreeLearn 风格参数
     TREE_BASE_HEIGHT = 0.5
@@ -325,7 +325,7 @@ class GinkgoDataset(Dataset):
 
             sem_label = int(semantic_label[inst_idx[0]])
 
-            if sem_label == 1:  # ginkgo
+            if sem_label == 1:  # tree
                 tree_points = xyz[mask]
 
                 # TreeLearn 风格：使用底部 0.5m 的点计算中心
@@ -507,25 +507,25 @@ class GinkgoDataset(Dataset):
 # 辅助函数
 # ==============================================================================
 
-def build_ginkgo_dataset(data_cfg, logger=None):
+def build_forest_boundary_dataset(data_cfg, logger=None):
     """
-    构建银杏树数据集
+    构建森林边界数据集
 
     Args:
         data_cfg: 数据配置字典
         logger: 日志器
 
     Returns:
-        dataset: GinkgoDataset 实例
+        dataset: ForestBoundaryDataset 实例
     """
     _cfg = data_cfg.copy()
     if 'type' in _cfg:
         _cfg.pop('type')
     _cfg['logger'] = logger
-    return GinkgoDataset(**_cfg)
+    return ForestBoundaryDataset(**_cfg)
 
 
-def build_ginkgo_dataloader(dataset, batch_size=1, num_workers=1, training=True, dist=False):
+def build_forest_boundary_dataloader(dataset, batch_size=1, num_workers=1, training=True, dist=False):
     """
     构建数据加载器
 
@@ -601,7 +601,7 @@ if __name__ == '__main__':
     """测试数据集"""
     import yaml
 
-    config_path = 'ginkgo_boundary_segment.yaml'
+    config_path = Path(__file__).with_name('config.yaml')
 
     try:
         with open(config_path, 'r') as f:
@@ -609,7 +609,7 @@ if __name__ == '__main__':
 
         # 构建训练数据集
         train_cfg = cfg['data']['train']
-        train_dataset = build_ginkgo_dataset(train_cfg)
+        train_dataset = build_forest_boundary_dataset(train_cfg)
 
         print(f"训练集大小: {len(train_dataset)}")
 
@@ -623,7 +623,7 @@ if __name__ == '__main__':
             print(f"instance_label unique: {sample[5].unique()}")
 
         # 测试 collate_fn
-        train_loader = build_ginkgo_dataloader(
+        train_loader = build_forest_boundary_dataloader(
             train_dataset,
             batch_size=2,
             num_workers=0,
