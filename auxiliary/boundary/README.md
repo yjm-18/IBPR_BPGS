@@ -1,19 +1,26 @@
-# Shared auxiliary boundary predictor
+# Auxiliary boundary predictor
 
-This optional component runs in the **separate TL/boundary environment**, not the core
-Python3.11 scikit-learn environment. Recorded versions: Python3.12.9, PyTorch2.5.1
-(CUDA11.8), NumPy2.2.4, SciPy1.15.2, laspy2.6.1. Install the matching spconv and the
-SoftGroup `voxelization_idx` CUDA extension from the original upstream environment.
-Do not substitute the old per-point voxelization fallback when retraining.
-The main A/B package only needs precomputed boundary probabilities.
+The IBPR/BPGS pipeline consumes precomputed boundary probabilities. Use the supplied
+predictor in the separate TL/boundary environment described in
+[ENVIRONMENTS.md](../../docs/ENVIRONMENTS.md).
 
-The loader decodes the SoftGroup voxel rulebook as a count in the first column,
-followed by that many valid point indices. It converts the remaining padding to
-`-1` and checks that every point belongs to exactly one voxel, consistent with the
-point-to-voxel vector. Counts and padding are excluded from feature aggregation;
-point index zero remains a valid input.
+## Inference
 
-Prepare each of the 13 train and 8 validation LAS files with its recorded domain:
+```bash
+python auxiliary/boundary/infer.py --points points.npz \
+  --checkpoint checkpoints/boundary/best_boundary_model.pth --output probabilities.npy
+```
+
+`points.npz` contains `points` with shape (N, 3), in metres. Inference uses three zero
+placeholder channels and three normalized voxel-coordinate channels, 0.1 m voxels,
+cores of at most 800,000 points and a 2 m halo. Each point receives one probability.
+Map probabilities to TL source points using the fixed coordinate correspondence;
+SAT uses probabilities on the aligned evaluation points.
+
+## Optional training
+
+Prepare the 13 training and 8 validation plots listed in
+[the split manifest](../../docs/protocols/forinstance_manifest.json).
 
 ```bash
 python auxiliary/boundary/prepare_labels.py --las YOUR_TRAIN.las --domain NIBIO \
@@ -21,22 +28,12 @@ python auxiliary/boundary/prepare_labels.py --las YOUR_TRAIN.las --domain NIBIO 
 python auxiliary/boundary/train_boundary_only.py --config auxiliary/boundary/config.yaml --epochs 100
 ```
 
-Repeat using the split list in `docs/protocols/forinstance_manifest.json`; validation
-files go under `data/boundary/val`. Configuration key `data.test` denotes the validation
-loader, not the held-out experiment test set. The released predictor uses fixed domain-specific K values.
-Checkpoint selection uses sampled validation AP; see [the exact procedure](../../docs/BOUNDARY_VALIDATION.md).
+Place validation files under `data/boundary/val`; `data.test` in the configuration
+is the validation loader. Install the original SoftGroup `voxelization_idx` extension.
+The loader reads each rulebook row as a point count followed by valid point indices,
+ignores padding and verifies the point-to-voxel correspondence.
 
-Use the distributed frozen predictor to generate probabilities on common evaluation points:
-
-```bash
-python auxiliary/boundary/infer.py --points points.npz \
-  --checkpoint checkpoints/boundary/best_boundary_model.pth --output probabilities.npy
-```
-
-`points.npz` contains `points` (N,3). Inference uses geometry only, zero RGB features,
-0.1m voxels, at most 800,000-point cores with a 2m halo, and exactly one output per point.
-Map these probabilities to TL source points using the same frozen coordinate correspondence;
-SAT consumes them on the aligned evaluation points. Full neural training was not rerun
-as part of code packaging. The archived checkpoint remains the reproduction reference.
-
-See [ENVIRONMENTS.md](../../docs/ENVIRONMENTS.md) for the complete component-specific version table.
+Validation pools up to 5,000 valid reference-tree points per batch, selected with
+`np.linspace(0, n - 1, min(5000, n), dtype=np.int64)`. Boundary labels are binarized at
+0.5. The current training code groups tied scores when computing AP. This rule applies
+to new training runs; the supplied frozen checkpoint is used directly for A/B reproduction.

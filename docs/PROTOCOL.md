@@ -2,7 +2,7 @@
 
 This package contains the released method with 39-dimensional IBPR and
 38-dimensional BPGS. TL and SAT use separate scorers. Four final A models and sixteen
-final B models are distributed in the unchanged checkpoint archive.
+final B models are distributed in the checkpoint archive.
 
 ## IBPR and BPGS training and evaluation
 
@@ -38,9 +38,6 @@ embeddings. The transformation and point contract are specified in [DATA_FORMAT.
 
 ## Evaluation and reporting
 
-Test scales: FOR-instance 9,236,696 points / 323 reference trees; Ofental 2,474,717 /
-119; LAUTx 23,016,952 / 515. Dataset performance results are reported in the paper.
-
 A training uses maximum-intersection Hungarian matching, discarding zero-intersection
 matches. B targets and C/H/G freeze baseline maximum-IoU matching without a 0.5 cutoff.
 Detection PRF uses maximum-total-IoU Hungarian matching with strict IoU > 0.5 and counts
@@ -50,5 +47,5 @@ IoU threshold, pooled ranking and 101 recall samples, averaged over 0.50:0.05:0.
 AP does not apply the PRF FP-overlap filter.
 
 Auxiliary checkpoint selection uses sampled-point boundary AP as described in
-[BOUNDARY_VALIDATION.md](BOUNDARY_VALIDATION.md). Software versions are separated by
+[the auxiliary instructions](../auxiliary/boundary/README.md). Software versions are separated by
 component in [ENVIRONMENTS.md](ENVIRONMENTS.md). Baseline checkpoint sources are listed in [BASELINES.md](BASELINES.md).

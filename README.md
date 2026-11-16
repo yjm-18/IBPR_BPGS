@@ -1,88 +1,81 @@
 # IBPR + BPGS
 
-Release **0.1.0** for local tree-instance label correction.
-The source release corresponds to the **39-dimensional IBPR** experiments on
-FOR-instance, Ofental and LAUTx with TreeLearn (TL) and SegmentAnyTree (SAT).
+Point-to-instance reassignment (IBPR) and region selection (BPGS) for tree instance
+segmentation, using TreeLearn (TL) or SegmentAnyTree (SAT) predictions.
+The package includes training, inference and evaluation on FOR-instance, Ofental
+and LAUTx. IBPR uses 39 features; BPGS uses 38 features.
 
-IBPR scores point-to-instance relations; BPGS predicts the marginal net correction of
-spatial proposal regions. Baseline predictions remain frozen. TL and SAT use separate
-scorers. This is the method release, starting from aligned base-model exports; it is
-not a bundled distribution of the two upstream segmentation frameworks or their datasets.
+## Installation
 
-## Install
-
-Use Python 3.11.7 for the core package. The checkpoint-compatible environment is pinned.
+Use Python 3.11.7 and the pinned dependencies for the supplied scikit-learn models.
 
 ```bash
 python -m pip install -r requirements.txt
 python -m pip install --no-deps -e .
-python -m unittest discover -s tests -v
 ```
 
-Auxiliary boundary training/inference requires a separate CUDA environment; see
-[auxiliary boundary instructions](auxiliary/boundary/README.md).
+The auxiliary boundary network uses a separate CUDA environment. See
+[component environments](docs/ENVIRONMENTS.md).
 
-## Checkpoints
+## Data preparation
 
-Download the [v0.1.0 checkpoint archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip)
-and its [SHA256 checksum](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip.sha256).
-Extract the archive **inside this repository**. It creates
-`checkpoints/`. The archive contains four final A models, sixteen B models, and the
-shared auxiliary boundary checkpoint. LAUTx reuses the FOR-instance A model and has
-one B model per held-out plot. Checkpoints are excluded from normal Git commits.
+Prepare aligned baseline predictions, point features and boundary probabilities
+as described in [the input format](docs/DATA_FORMAT.md). Obtain the baseline models
+from [the upstream checkpoint links](docs/BASELINES.md).
+
+```bash
+python scripts/prepare_scene.py --model TL --input raw_tl_export.npz --output scene.npz
+```
+
+Use `--model SAT` for SAT exports. TL requires a frozen 5NN mapping; SAT uses directly
+aligned points. Training and evaluation file lists are under `configs/manifests/`.
+Datasets and upstream baseline models are downloaded separately.
+
+## Pretrained models
+
+Download the [checkpoint archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip)
+and [SHA256 file](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip.sha256).
+Extract the archive in the repository root to create `checkpoints/`.
+It contains four IBPR models, sixteen BPGS models and one shared boundary predictor.
+LAUTx uses the corresponding FOR-instance IBPR model and one BPGS model per held-out plot.
 
 ```bash
 ibpr-bpgs verify-weights --weights checkpoints
 ```
 
-Load pickle/PyTorch files only from a trusted source. SHA256 and byte sizes are in
-[configs/checkpoints.json](configs/checkpoints.json). The weight archive is distributed separately from the source code.
+Boundary probability generation is described in
+[auxiliary/boundary/README.md](auxiliary/boundary/README.md).
 
-## Prepare inputs and infer
-
-Read [the point/feature contract](docs/DATA_FORMAT.md) first. Prepared NPZ files retain
-the exact frozen baseline, feature preprocessing and TL 5NN mapping. Ground truth is
-not required for inference. A point cloud alone is not sufficient: base-model outputs
-and auxiliary boundary probabilities must first be exported.
+## Inference and evaluation
 
 ```bash
-python scripts/prepare_scene.py --model TL --input raw_tl_export.npz --output scene.npz
 ibpr-bpgs infer --scene scene.npz --config configs/FOR-instance_TL.json \
   --weights checkpoints --output outputs/example --evaluate
 ```
 
-For SAT use `--model SAT` and its corresponding config. Omit `--evaluate` for unlabelled
-inputs. Outputs include baseline / A / AB source and evaluation labels, proposal scores,
-region scores/acceptance, and optional evaluation metrics.
+Omit `--evaluate` for inputs without reference labels. Predictions are saved for
+baseline, IBPR and IBPR+BPGS, together with proposal and region scores.
 
-Full benchmark manifests preserve scene order, which also determines stable AP tie order:
+To evaluate an ordered dataset manifest:
 
 ```bash
 python scripts/benchmark.py --manifest configs/manifests/LAUTx_SAT_test.json \
   --weights checkpoints --output outputs/LAUTx_SAT
 ```
 
-Place independently obtained prepared scenes at the manifest paths. The archives do not
-contain point clouds, upstream weights or multi-gigabyte prediction caches.
+Metric definitions and data splits are in [PROTOCOL.md](docs/PROTOCOL.md).
 
-## Training and protocol
+## Training
 
-See [training commands](docs/TRAINING.md), [experiment protocol](docs/PROTOCOL.md),
-and the selected A/B configurations under `configs/`. `reproduce-fixed` trains with
-the supplied fixed parameters. `nested-b` implements LAUTx inner/outer
-leave-one-plot-out training and selection.
+```bash
+ibpr-bpgs-train reproduce-fixed \
+  --manifest configs/manifests/FOR-instance_TL_train.json \
+  --config configs/FOR-instance_TL.json --output outputs/train_FOR_TL
+```
 
-## Evaluation and validation
+See [TRAINING.md](docs/TRAINING.md) for Ofental training and LAUTx leave-one-plot-out
+BPGS training. Supplied configurations specify the model parameters and execution thresholds.
 
-Dataset performance results are reported in the paper. This repository provides
-code, model configurations and checkpoints for reproduction.
-Ofental uses a fixed BPGS execution threshold of 0 with the supplied model weights.
+## Dependencies and third-party components
 
-[Release validation](docs/VALIDATION.md) states which paths were actually executed.
-The repository includes tests of 5NN ties, strict thresholds, region connectivity,
-39D features, marginal target replay and empty predictions.
-
-## Repository and licensing
-
-Repository: [yjm-18/IBPR_BPGS](https://github.com/yjm-18/IBPR_BPGS).
 See [NOTICE.md](NOTICE.md) for licensing status and third-party components.

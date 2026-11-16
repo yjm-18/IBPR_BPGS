@@ -56,6 +56,3 @@ To reproduce the existing 39D **fixed-choice** LAUTx refit instead of rerunning 
 use `fit-b` with the five other plots' `regions.npz` and the corresponding held-out
 plot's supplied config. Inference can use the resulting B by editing a copy of the
 config's relative checkpoint paths. Never overwrite the archived reference configs.
-
-Model training and fitting are included, but full neural-network retraining and the
-entire six-benchmark training job were not repeated while preparing this release.

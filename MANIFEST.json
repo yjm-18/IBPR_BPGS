@@ -10,19 +10,14 @@
     "sha256": "11877d74d965e2416fcb22b90b6eddab501c1f8136932cc7a5a0fe9a1d89c1a3"
   },
   {
-    "path": "QUICKSTART.md",
-    "bytes": 3010,
-    "sha256": "7edc42c79da50c54e1d6278b87707db3bc3620f9f86987df492767f4dd6e64f1"
-  },
-  {
     "path": "README.md",
-    "bytes": 4001,
-    "sha256": "95a15c55716079220ac36c55818976cb14f8f40e7e3273f61cc647be8fcd27b3"
+    "bytes": 2971,
+    "sha256": "38ed19d97fd7feb18d34c01e6ae40124c211ba05b808e6ddbb966d03b50603a1"
   },
   {
     "path": "auxiliary/boundary/README.md",
-    "bytes": 2417,
-    "sha256": "fd35f0b17aae3628dff81db3e7d034e6816f47d8c57b4e40d1cc268307556ff9"
+    "bytes": 1869,
+    "sha256": "febca8c36f72790126794fbc547161a46662553cb5704fe2b0d7f0e7d0de06e9"
   },
   {
     "path": "auxiliary/boundary/boundary_integrity.py",
@@ -220,54 +215,29 @@
     "sha256": "90ea46466f4e0ad1a7ba1631375101be1252878d3adacb4972f546db157a0604"
   },
   {
-    "path": "docs/BOUNDARY_VALIDATION.md",
-    "bytes": 2205,
-    "sha256": "9f39f849d83a0c8d5facc90ba5af72f06a5ca69a2e6cc56e5693add0e02bca4e"
-  },
-  {
     "path": "docs/DATA_FORMAT.md",
     "bytes": 3546,
     "sha256": "021111cec4d82b8783ac177c0c5274175db738f653f3cc2a787dc614d934e427"
   },
   {
     "path": "docs/ENVIRONMENTS.md",
-    "bytes": 1584,
-    "sha256": "71e9d6a4c028004bc70a4c916fb3dd9a6f61db5302aafe50f19a5e894b3d7fb9"
+    "bytes": 1183,
+    "sha256": "e71ab657a8bdfc78db1918b2bee4d12a082b09f03aa97bf5350388e843f87968"
   },
   {
     "path": "docs/PROTOCOL.md",
-    "bytes": 3336,
-    "sha256": "355df74d5dbc1820064f2d680253faa74b14da4f79696cb593534c47f6fb25ec"
+    "bytes": 3168,
+    "sha256": "035437f07ac5a9ec46b07f54744692cddebe8c0a308fce00d05ef0c23bb74b16"
   },
   {
     "path": "docs/TRAINING.md",
-    "bytes": 3178,
-    "sha256": "74138e5d2531e003ecd0736e2e858d957c0fb512c4c1d3232f6dbfbf20b600cc"
-  },
-  {
-    "path": "docs/VALIDATION.md",
-    "bytes": 1280,
-    "sha256": "8b6415982a083e28fb0535dcce2965dba0f8cc529711d5e48fe7c16eeb6227ce"
-  },
-  {
-    "path": "docs/protocols/dataset_scales.json",
-    "bytes": 1861,
-    "sha256": "89e380c966a0eace48a978cca803d11169c324ddd8d8147cc4058fa4d8d6712f"
-  },
-  {
-    "path": "docs/protocols/environment_audit.json",
-    "bytes": 883,
-    "sha256": "bdc386665516c0036fc15bf9406cbe922e5764c38d16be8146d93a404646bf5d"
+    "bytes": 3011,
+    "sha256": "4c80f7dbffe3db67926b6d5162e716c6e402aefc62bd9078b0a28fdb0f743b9b"
   },
   {
     "path": "docs/protocols/forinstance_manifest.json",
     "bytes": 2308,
     "sha256": "603adf7dcecfc3dd8ba5ab27f603a86bdb1b8c9b630ef12957781f10f5a2ffe2"
-  },
-  {
-    "path": "docs/protocols/lautx_protocol.json",
-    "bytes": 507,
-    "sha256": "a0120815029b1d49a31d0a0031b4e3ad84f3ae30d2497e72d5187ed4e214cda2"
   },
   {
     "path": "environment.yml",
