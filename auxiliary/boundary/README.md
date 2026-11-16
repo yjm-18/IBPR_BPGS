@@ -1,8 +1,10 @@
 # Auxiliary boundary predictor
 
 The IBPR/BPGS pipeline consumes precomputed boundary probabilities. Use the supplied
-predictor in the separate TL/boundary environment described in
-[ENVIRONMENTS.md](../../docs/ENVIRONMENTS.md).
+predictor in a separate environment: Python 3.12.9, PyTorch 2.5.1 with CUDA 11.8,
+spconv-cu118 2.3.8 and cumm-cu118 0.7.11. The remaining Python package versions are
+listed in [requirements-recorded.txt](requirements-recorded.txt). Build the SoftGroup
+voxelization extension against this environment.
 
 ## Inference
 

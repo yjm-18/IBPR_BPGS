@@ -47,5 +47,4 @@ IoU threshold, pooled ranking and 101 recall samples, averaged over 0.50:0.05:0.
 AP does not apply the PRF FP-overlap filter.
 
 Auxiliary checkpoint selection uses sampled-point boundary AP as described in
-[the auxiliary instructions](../auxiliary/boundary/README.md). Software versions are separated by
-component in [ENVIRONMENTS.md](ENVIRONMENTS.md). Baseline checkpoint sources are listed in [BASELINES.md](BASELINES.md).
+[the auxiliary instructions](../auxiliary/boundary/README.md). Baseline checkpoint links are in [README.md](../README.md).

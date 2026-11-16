@@ -58,4 +58,4 @@ SAT uses the corresponding aligned saved `pos`/common-point coordinates.
 The Ofental SAT reference export uses labels <=1 as non-tree: convert them to 0
 before the public `gt>0` metric convention. Positive tree IDs may remain nonconsecutive.
 Raw GT sentinel conventions are not automatically inferred by the core loader.
-Baseline checkpoint sources are documented in [BASELINES.md](BASELINES.md).
+Baseline checkpoint sources are documented in [README.md](../README.md).

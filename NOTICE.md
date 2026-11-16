@@ -11,5 +11,5 @@ and inherited components must be preserved.
 
 TreeLearn, SegmentAnyTree, their checkpoints and raw datasets are not redistributed
 in the source package. Official baseline checkpoint links are documented in
-`docs/BASELINES.md`. Hashes for the separate IBPR/BPGS and auxiliary boundary
+`README.md`. Hashes for the separate IBPR/BPGS and auxiliary boundary
 checkpoints are recorded in `configs/checkpoints.json`.
