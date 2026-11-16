@@ -30,6 +30,11 @@ python auxiliary/boundary/prepare_labels.py --las YOUR_TRAIN.las --domain NIBIO 
 python auxiliary/boundary/train_boundary_only.py --config auxiliary/boundary/config.yaml --epochs 100
 ```
 
+Known domains (CULS, NIBIO, RMIT, SCION and TUWIEN) retain their configured K values.
+For another domain, provide `--domain YOUR_DATASET --default-k 128`, replacing 128
+with your chosen positive neighbor count. `--default-k` only applies to unknown
+domains; it does not override existing settings. Domain names are case-insensitive.
+
 Place validation files under `data/boundary/val`; `data.test` in the configuration
 is the validation loader. Install the original SoftGroup `voxelization_idx` extension.
 The loader reads each rulebook row as a point count followed by valid point indices,

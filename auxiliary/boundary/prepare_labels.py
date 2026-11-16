@@ -1,5 +1,5 @@
-"""FOR-instance raw LAS -> class3 removal -> 0.1m -> fixed domain-K binary labels.
-Uses the fixed domain-specific K values below.
+"""Raw LAS -> class3 removal -> 0.1m -> binary boundary labels.
+Known domains retain fixed K values; other domains require an explicit fallback.
 """
 import argparse
 from pathlib import Path
@@ -47,12 +47,25 @@ def boundary_knn(xyz: np.ndarray, gt: np.ndarray, neighbors: int) -> np.ndarray:
     return output
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--las',required=True);p.add_argument('--domain',choices=list(DOMAIN_K),required=True)
+    p=argparse.ArgumentParser()
+    p.add_argument('--las',required=True)
+    p.add_argument('--domain',required=True,type=lambda value: value.strip().upper(),
+                   help='Dataset/domain name; known domains use their fixed K')
+    p.add_argument('--default-k',type=int,default=None,
+                   help='Positive neighbor count used only for an unknown domain')
     p.add_argument('--output',required=True,help='Path ending _merged_inst_nostuff.pth under train/ or val/')
-    a=p.parse_args();cloud=laspy.read(a.las);keep=np.asarray(cloud.classification)!=3
+    a=p.parse_args()
+    if not a.domain:
+        p.error('--domain must not be empty')
+    if a.default_k is not None and a.default_k <= 0:
+        p.error('--default-k must be a positive integer')
+    neighbors=DOMAIN_K.get(a.domain,a.default_k)
+    if neighbors is None:
+        p.error(f'Unknown domain {a.domain!r}; provide --default-k')
+    cloud=laspy.read(a.las);keep=np.asarray(cloud.classification)!=3
     xyz=np.column_stack([cloud.x,cloud.y,cloud.z])[keep];gt=np.asarray(cloud['treeID'],np.int32)[keep]
-    vx,vg,origin=voxelize(xyz,gt);boundary=boundary_knn(vx,vg,DOMAIN_K[a.domain]);valid=vg>0
+    vx,vg,origin=voxelize(xyz,gt);boundary=boundary_knn(vx,vg,neighbors);valid=vg>0
     instance=np.full(len(vg),-100,np.int64);instance[valid]=np.searchsorted(np.unique(vg[valid]),vg[valid])
     values=[vx,np.zeros((len(vg),3),np.float32),valid.astype(np.int64),instance,np.zeros(len(vg),np.float32),boundary.astype(np.float32)]
     out=Path(a.output);out.parent.mkdir(parents=True,exist_ok=True)
-    torch.save(tuple(torch.from_numpy(v) for v in values)+(torch.tensor([ROOM[a.domain]]),Path(a.las).stem),out)
+    torch.save(tuple(torch.from_numpy(v) for v in values)+(torch.tensor([ROOM.get(a.domain,-1)]),Path(a.las).stem),out)
