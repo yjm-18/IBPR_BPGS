@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+/checkpoints/
+/data/
+/outputs/
+/results/
+*.zip
+.env
+.env.*

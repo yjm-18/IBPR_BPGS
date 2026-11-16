@@ -1,0 +1,130 @@
+[
+  {
+    "key": "culs__culs_plot_1_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_6_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_12_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_4_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_21_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_11_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_10_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_3_annotated",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_7_annotated",
+    "split": "train"
+  },
+  {
+    "key": "rmit__rmit_train",
+    "split": "train"
+  },
+  {
+    "key": "scion__scion_plot_39_annotated",
+    "split": "train"
+  },
+  {
+    "key": "scion__scion_plot_87_annotated",
+    "split": "train"
+  },
+  {
+    "key": "tuwien__tuwien_train",
+    "split": "train"
+  },
+  {
+    "key": "nibio__nibio_plot_16_annotated",
+    "split": "val"
+  },
+  {
+    "key": "culs__culs_plot_3_annotated",
+    "split": "val"
+  },
+  {
+    "key": "scion__scion_plot_35_annotated",
+    "split": "val"
+  },
+  {
+    "key": "nibio__nibio_plot_9_annotated",
+    "split": "val"
+  },
+  {
+    "key": "nibio__nibio_plot_13_annotated",
+    "split": "val"
+  },
+  {
+    "key": "nibio__nibio_plot_8_annotated",
+    "split": "val"
+  },
+  {
+    "key": "nibio__nibio_plot_2_annotated",
+    "split": "val"
+  },
+  {
+    "key": "nibio__nibio_plot_19_annotated",
+    "split": "val"
+  },
+  {
+    "key": "culs__culs_plot_2_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_17_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_18_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_1_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_22_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_23_annotated",
+    "split": "test"
+  },
+  {
+    "key": "nibio__nibio_plot_5_annotated",
+    "split": "test"
+  },
+  {
+    "key": "rmit__rmit_test",
+    "split": "test"
+  },
+  {
+    "key": "scion__scion_plot_31_annotated",
+    "split": "test"
+  },
+  {
+    "key": "scion__scion_plot_61_annotated",
+    "split": "test"
+  },
+  {
+    "key": "tuwien__tuwien_test",
+    "split": "test"
+  }
+]
