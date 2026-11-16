@@ -7,6 +7,12 @@ SoftGroup `voxelization_idx` CUDA extension from the original upstream environme
 Do not substitute the old per-point voxelization fallback when retraining.
 The main A/B package only needs precomputed boundary probabilities.
 
+The loader decodes the SoftGroup voxel rulebook as a count in the first column,
+followed by that many valid point indices. It converts the remaining padding to
+`-1` and checks that every point belongs to exactly one voxel, consistent with the
+point-to-voxel vector. Counts and padding are excluded from feature aggregation;
+point index zero remains a valid input.
+
 Prepare each of the 13 train and 8 validation LAS files with its recorded domain:
 
 ```bash

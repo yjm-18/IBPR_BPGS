@@ -1,8 +1,8 @@
 # Auxiliary Boundary Validation AP
 
 The shared auxiliary boundary predictor is fitted on the 13 FOR-instance training
-plots. Its checkpoint is selected using the eight validation plots. A/B experiments
-use the fixed predictor outputs.
+plots. The distributed checkpoint was selected using the eight validation plots.
+A/B experiments use this fixed predictor and its precomputed outputs.
 
 ## AP uses sampled valid points
 
@@ -19,9 +19,16 @@ With batch size one, eight fully processed plots and at least 5,000 valid points
 plot, the pooled AP contains 40,000 points. Sampling is deterministic in the batch's
 point order; it is not spatially balanced or randomly sampled.
 
-The checkpoint-selection metric is `average_precision`; the selected checkpoint is
-epoch 97 of the 100-epoch training run. Labels are binary with a configured hard-label
-threshold of 0.5. They are not expanded soft labels in this configuration.
+The current training implementation computes `average_precision` by grouping equal
+prediction scores before accumulating precision and recall. This makes AP invariant
+to the input order within a tied-score group. The sampling and pooling rules above
+are unchanged.
+
+The distributed frozen checkpoint is epoch 97 of the recorded 100-epoch run and
+remains the input reference for A/B reproduction. The grouped-score implementation
+applies to new training runs; the distributed checkpoint has not been reselected.
+Labels are binary with a configured hard-label threshold of 0.5. They are not
+expanded soft labels in this configuration.
 
 ## Other counters are separate
 

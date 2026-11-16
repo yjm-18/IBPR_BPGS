@@ -67,10 +67,13 @@ def propagate(pred, idx):
     return out
 
 
-def lookup_for(gt, base):
+def lookup_for(gt, base, label_domain=None):
     gs, ps, _, _, _, iou = matrices(gt, base, 0)
     a, b = linear_sum_assignment(iou, maximize=True)
-    lookup = np.full(int(base.max(initial=0)) + 1, -1, np.int64)
+    maximum = int(base.max(initial=0))
+    if label_domain is not None:
+        maximum = max(maximum, int(np.asarray(label_domain).max(initial=0)))
+    lookup = np.full(maximum + 1, -1, np.int64)
     lookup[ps[a]] = gs[b]
     return lookup
 
@@ -89,7 +92,7 @@ def gain(gt, base, after, lookup):
     )
 
 
-THRESHOLDS = np.arange(0.5, 0.951, 0.05)
+THRESHOLDS = np.arange(50, 100, 5, dtype=np.int64) / 100.0
 
 
 def _measure(pred, gt, prob, source_pred):
@@ -124,5 +127,5 @@ def evaluate(scene, gt, nn, prediction):
     after = propagate(prediction, nn) if nn is not None else prediction
     # Confidence always uses frozen baseline source labels.
     metrics, entry = _measure(after, gt, scene.tree_probability, scene.pred)
-    metrics.update(gain(gt, baseline, after, lookup_for(gt, baseline)))
+    metrics.update(gain(gt, baseline, after, lookup_for(gt, baseline, scene.pred)))
     return metrics, entry, after

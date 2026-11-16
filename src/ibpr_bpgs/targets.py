@@ -39,7 +39,7 @@ def compact_cache(scene, gt, nn, base, d):
         affected=affected,
         gt=gt[affected],
         baseline=base[affected],
-        lookup=lookup_for(gt, base),
+        lookup=lookup_for(gt, base, np.concatenate((scene.pred, target))),
         regions=member[near],
         base_neighbors=scene.pred[near],
         target_neighbors=target[near],

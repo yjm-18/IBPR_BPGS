@@ -126,3 +126,19 @@ def validate_metric_arrays(pred_probs, gt_labels, valid_mask=None):
         if mask.dtype.kind != "b":
             raise BoundaryIntegrityError("valid_mask must be Boolean, not a list of point indices.")
     return probs, labels, mask
+
+
+def decode_softgroup_voxel_point_table(table, point_map, num_points, num_voxels):
+    """Decode SoftGroup's count-prefixed rulebook to point indices/-1 padding."""
+    array = as_numpy(table)
+    require_point_shapes(num_voxels, softgroup_rulebook=(array, 2))
+    if array.dtype.kind not in "iu" or array.shape[1] < 2:
+        raise BoundaryIntegrityError("SoftGroup rulebook needs counts and point indices.")
+    counts = array[:, 0]
+    if np.any(counts < 1) or np.any(counts > array.shape[1] - 1):
+        raise BoundaryIntegrityError("Invalid SoftGroup per-voxel point count.")
+    valid = np.arange(array.shape[1] - 1)[None, :] < counts[:, None]
+    decoded = np.where(valid, array[:, 1:], -1).astype(np.int64)
+    validate_index_vector(point_map, num_points, num_voxels, "point_map")
+    validate_voxel_point_table(decoded, point_map, num_points, num_voxels)
+    return decoded

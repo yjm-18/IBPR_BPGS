@@ -162,10 +162,12 @@ class BoundaryMetrics:
             return 0.0
         order = np.argsort(-probs, kind='mergesort')
         labels = labels[order]
-        true_positives = np.cumsum(labels)
-        ranks = np.arange(1, len(labels) + 1)
-        precision = true_positives / ranks
-        return float(precision[labels == 1].sum() / positives)
+        sorted_probs = probs[order]
+        ends = np.r_[np.flatnonzero(np.diff(sorted_probs)), len(labels) - 1]
+        true_positives = np.cumsum(labels)[ends]
+        precision = true_positives / (ends + 1)
+        recall_increment = np.diff(np.r_[0, true_positives]) / positives
+        return float(np.sum(recall_increment * precision))
 
     def compute_best_threshold(self):
         if not np.any(self.grid_tp + self.grid_fn):

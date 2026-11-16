@@ -471,6 +471,10 @@ class GinkgoDataset(Dataset):
         try:
             from softgroup.ops import voxelization_idx
             voxel_coords, v2p_map, p2v_map = voxelization_idx(coords, batch_id)
+            from boundary_integrity import decode_softgroup_voxel_point_table
+            p2v_map = torch.from_numpy(decode_softgroup_voxel_point_table(
+                p2v_map, v2p_map, len(coords), len(voxel_coords)
+            )).to(dtype=p2v_map.dtype, device=p2v_map.device)
         except ImportError as exc:
             raise ImportError(
                 "Boundary training requires the original SoftGroup voxelization_idx extension; "
