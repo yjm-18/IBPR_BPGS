@@ -10,7 +10,7 @@ def predict(scene, nn, a_model, b_model, config, chunk_size=50000):
     if a_model.n_features_in_ != 39 or b_model.n_features_in_ != 38:
         raise ValueError("Release requires 39D IBPR and 38D BPGS checkpoints")
     scores = score_scene(scene, a_model, chunk_size=chunk_size)
-    regions = region_data(scene, scores, config["A"])
+    regions = region_data(scene, scores, config["A"], model=config.get("model"))
     u = (
         b_model.predict(regions["features"])
         if len(regions["components"])

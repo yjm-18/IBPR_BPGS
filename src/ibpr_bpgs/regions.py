@@ -117,7 +117,12 @@ def candidate_arrays(scene, scores):
     )
 
 
-def region_data(scene, score_path, config):
+def region_data(scene, score_path, config, model=None):
+    # TL has a placeholder count of one, not measured prediction coverage.
+    # Avoid region-size-dependent float32 reduction noise in this constant feature.
+    if model == "TL" and not np.all(scene.prediction_count == 1):
+        raise ValueError("TL prediction_count must contain only placeholder ones")
+    fixed_coverage = np.float32(np.log(2.0)) if model == "TL" else None
     ids, dest, score, gain, valid, seed = candidate_arrays(scene, score_path)
     pool = valid & (score >= config["score"]) & (gain > config["margin"])
     chosen = np.flatnonzero(pool)
@@ -190,7 +195,7 @@ def region_data(scene, score_path, config):
             bb.std(),
             tp.mean(),
             tp.min(),
-            pc.mean(),
+            fixed_coverage if fixed_coverage is not None else pc.mean(),
             np.log1p(stats["count"][source]),
             np.log1p(stats["count"][target]),
             np.log((stats["count"][target] + 1) / (stats["count"][source] + 1)),

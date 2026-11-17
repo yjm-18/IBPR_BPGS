@@ -59,3 +59,7 @@ The Ofental SAT reference export uses labels <=1 as non-tree: convert them to 0
 before the public `gt>0` metric convention. Positive tree IDs may remain nonconsecutive.
 Raw GT sentinel conventions are not automatically inferred by the core loader.
 Baseline checkpoint sources are documented in [README.md](../README.md).
+
+For TreeLearn, the BPGS region coverage feature is explicitly fixed to `float32(log(2))`
+in training and inference. The shared region representation remains 38-dimensional.
+SegmentAnyTree retains the mean of `log1p(prediction_count)` over each region.

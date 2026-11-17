@@ -57,7 +57,7 @@ def make_regions(scene, gt, nn, scorer, config, point_mask=None):
     if point_mask is not None:
         keep = point_mask[scores["point_ids"]]
         scores = {k: v[keep] for k, v in scores.items()}
-    d = region_data(scene, scores, config["A"])
+    d = region_data(scene, scores, config["A"], model=config.get("model"))
     baseline = propagate(scene.pred, nn) if nn is not None else scene.pred
     cache = compact_cache(scene, gt, nn, baseline, d)
     return d, cache, marginal_targets(cache, len(d["components"]))

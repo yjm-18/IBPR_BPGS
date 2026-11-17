@@ -38,10 +38,13 @@ Datasets and upstream baseline models are downloaded separately.
 
 ## Pretrained models
 
-Download the [checkpoint archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip)
-and [SHA256 file](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.0/ibpr-bpgs-0.1.0-checkpoints.zip.sha256).
+Download the [checkpoint archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-0.1.1-checkpoints.zip)
+and [SHA256 file](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-0.1.1-checkpoints.zip.sha256).
 Extract the archive in the repository root to create `checkpoints/`.
 It contains four IBPR models, sixteen BPGS models and one shared boundary predictor.
+Use the v0.1.1 archive with this code: its eight TreeLearn BPGS models use a fixed
+region coverage feature in both training and inference. IBPR, SegmentAnyTree BPGS,
+and the auxiliary boundary checkpoints are unchanged.
 LAUTx uses the corresponding FOR-instance IBPR model and one BPGS model per held-out plot.
 
 ```bash
