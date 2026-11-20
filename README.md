@@ -36,20 +36,18 @@ Use `--model SAT` for SAT exports. TL requires a frozen 5NN mapping; SAT uses di
 aligned points. Training and evaluation file lists are under `configs/manifests/`.
 Datasets and upstream baseline models are downloaded separately.
 
-## Pretrained models
+## Model weights
 
-Download the [checkpoint archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-0.1.1-checkpoints.zip)
-and [SHA256 file](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-0.1.1-checkpoints.zip.sha256).
-Extract the archive in the repository root to create `checkpoints/`.
-It contains four IBPR models, sixteen BPGS models and one shared boundary predictor.
-Use the v0.1.1 archive with this code: its eight TreeLearn BPGS models use a fixed
-region coverage feature in both training and inference. IBPR, SegmentAnyTree BPGS,
-and the auxiliary boundary checkpoints are unchanged.
+Pretrained IBPR (A) and BPGS (B) checkpoints are not distributed.
+Train these components using [TRAINING.md](docs/TRAINING.md) and place your
+checkpoints at the paths specified by the selected configuration.
 LAUTx uses the corresponding FOR-instance IBPR model and one BPGS model per held-out plot.
 
-```bash
-ibpr-bpgs verify-weights --weights checkpoints
-```
+Only the auxiliary boundary predictor is available as a
+[boundary-only archive](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-boundary-only.zip)
+with a [SHA256 file](https://github.com/yjm-18/IBPR_BPGS/releases/download/v0.1.1/ibpr-bpgs-boundary-only.zip.sha256).
+Extract it in the repository root to create `checkpoints/boundary/`.
+It does not contain IBPR or BPGS weights.
 
 Boundary probability generation is described in
 [auxiliary/boundary/README.md](auxiliary/boundary/README.md).
